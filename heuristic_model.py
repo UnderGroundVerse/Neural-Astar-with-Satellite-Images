@@ -1,15 +1,21 @@
 
+import tensorflow.python.keras as tf_keras
+from keras import __version__
+tf_keras.__version__ = __version__
+
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Input
+
+from tensorflow.python.keras.models import Sequential, load_model
+from tensorflow.python.keras.layers import Dense, Flatten, Input
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+
 
 import pickle
 
 
-class Heuristic_model:
+class HeuristicModel:
     def create_feed_forward_heuristic_model(input_dim):
             model = Sequential([
             Input(shape=(input_dim,)),
@@ -20,14 +26,11 @@ class Heuristic_model:
             model.compile(optimizer='adam', loss='mse', metrics=['mae'])
             return model
         
-    def save_model_as_pickle(model, name):  
-        with open('trained_models/'+name+'.pkl', 'wb') as file:  
-            pickle.dump(model, file)
+    def save_model(model, name):  
+        model.save(f'trained_models/{name}.keras')
             
-    def load_model_from_pickle(name):
-        with open('trained_models/'+name+'.pkl', 'rb') as file:  
-            model = pickle.load(file)
-        return model
+    def load_model(name):
+        return load_model(f'trained_models/{name}.keras')
         
         
     

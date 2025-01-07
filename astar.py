@@ -25,6 +25,7 @@ class Astar:
         self.open_list = [Node(starting_position, 0,0)]
         self.closed_list = []
         self.h_type = h_type.lower()
+        self.path=[]
 
     def is_position_valid(self, position):
         if position[0] > self.grid.shape[0] - 1 or position[1] > self.grid.shape[1] - 1: 
@@ -36,7 +37,7 @@ class Astar:
         return True
 
     def is_position_blocked(self, position):
-        return self.grid[position[0], position[1]] == 1
+        return int(self.grid[int(position[0]), int(position[1])]) == 1
 
     def calc_h(self, node):
         if self.h_type == 'manhattan':
@@ -57,33 +58,34 @@ class Astar:
         return node.f
 
     def get_neighbors(self, position):
-        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)] 
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         result = []
+
         for direction in directions:
-            x = position[0] + direction[0]
-            y = position[1] + direction[1]
+            x, y = position[0] + direction[0], position[1] + direction[1]
             if self.is_position_valid((x, y)):
                 result.append((x, y))
+
         return result
 
     def find_path(self):
         while self.open_list:
             current_node = min(self.open_list, key=lambda x: x.f)
-            if current_node.position == self.goal_position:
-               
+
+            if current_node.position[0] == self.goal_position[0] and current_node.position[1] == self.goal_position[1]:
                 path = []
                 while current_node:
                     path.append(current_node.position)
                     current_node = current_node.parent_node
                 self.path = path[::-1]
-                return self.path
+                return path[::-1]  # Return the path here
 
             self.open_list.remove(current_node)
             self.closed_list.append(current_node)
 
             for neighbor_pos in self.get_neighbors(current_node.position):
                 neighbor_node = Node(neighbor_pos, parent_node=current_node)
-                
+
                 if neighbor_node in self.closed_list:
                     continue
 
@@ -91,13 +93,17 @@ class Astar:
                 self.calc_h(neighbor_node)
                 self.calc_f(neighbor_node)
 
+                # Check if the neighbor is already in the open list
+                in_open_list = False
                 for open_node in self.open_list:
-                    if neighbor_node == open_node and neighbor_node.g >= open_node.g:
+                    if neighbor_node.position[0] == open_node.position[0] and neighbor_node.position[1] == open_node.position[1]   and neighbor_node.g >= open_node.g:
+                        in_open_list = True
                         break
-                else:
+
+                if not in_open_list:
                     self.open_list.append(neighbor_node)
 
-        return None 
+        return None  # No path found
     
     def visualize_path(self, path=None):
         path = self.path if path==None else path 
@@ -119,6 +125,10 @@ class Astar:
         
         
 class DifferentialAstar(Astar):
+    def __init__(self, grid, heuristic_model, goal_position, starting_position=(0, 0), h_type='manhattan'):
+        super().__init__(grid, goal_position, starting_position, h_type)
+        self.heuristic_model = heuristic_model
+        
     def calc_h(self, node):
         grid_flat = self.grid.flatten()
         input_data = np.hstack([grid_flat, node.position, self.goal_position]).reshape(1, -1)
@@ -132,7 +142,7 @@ if __name__ == '__main__':
     grid[5:15, 10] = 1  # Vertical wall
     grid[5, 5:15] = 1   # Horizontal wall
     start_pos = (2, 2)
-    goal_pos = (18, 18)
+    goal_pos = (10, 18)
     
     astar = Astar(grid, goal_position=goal_pos, starting_position=start_pos)
     astar.find_path()
