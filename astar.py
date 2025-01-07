@@ -118,6 +118,13 @@ class Astar:
         
         
         
+class DifferentialAstar(Astar):
+    def calc_h(self, node):
+        grid_flat = self.grid.flatten()
+        input_data = np.hstack([grid_flat, node.position, self.goal_position]).reshape(1, -1)
+        node.h = self.heuristic_model.predict(input_data)[0, 0]
+        return node.h
+        
         
         
 if __name__ == '__main__':
