@@ -47,7 +47,23 @@ def prepare_testdata(folder_path, img_size=(256,256)):
     test_images = test_images / 255.0
     return test_images
     
-    
+def porcess_masked_for_training(csv_file, img_size=(256,256),buffer_size=2000):
+    mask_paths = csv_file['mask_path']
+    mask_images = []
+
+    for path in mask_paths[:buffer_size]:
+        img = Image.open(path)
+        img = img.resize(img_size)
+        img = cv.cvtColor(np.array(img), cv.COLOR_BGR2GRAY)
+        img = np.expand_dims(img, axis=-1)
+        mask_images.append(img)
+
+    mask_images = np.array(mask_images)
+    mask_images = mask_images / 255.0
+    threshold = 0.1
+    mask_images = np.where(mask_images > threshold, 1, 0)
+    return mask_images
+
 
     
         
