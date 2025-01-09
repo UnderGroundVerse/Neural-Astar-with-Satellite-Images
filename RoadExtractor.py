@@ -48,7 +48,7 @@ class RoadExtractor:
         model.save(f'trained_models/{name}.keras')
     def load_model(name):
         return ks.models.load_model(f'trained_models/{name}.keras')
-    def get_predction(model, image , threshold=0.5):
+    def get_predction(model, image , threshold=0.1):
         pred_image = model.predict(image)
         pred_image = pred_image[0]
         pred_image = np.where(pred_image > threshold, 1, 0)
