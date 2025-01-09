@@ -1,5 +1,6 @@
 import keras as ks
 from keras import layers
+import numpy as np
 
 class RoadExtractor:
     def __init__(self, input_shape=(256, 256, 3)):
@@ -50,6 +51,10 @@ class RoadExtractor:
     def get_predction(model, image):
         pred_image = model.predict(image)
         pred_image = pred_image[0]
+        threshold = 0.5
+        pred_image = np.where(pred_image > threshold, 1, 0)
+        return pred_image
+        
         
         
     
