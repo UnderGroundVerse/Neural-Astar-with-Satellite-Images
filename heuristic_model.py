@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 
 import pickle
 
-
 class HeuristicModel:
     def create_feed_forward_heuristic_model(input_dim):
             model = Sequential([
