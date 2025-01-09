@@ -10,34 +10,38 @@ class RoadExtractor:
     def build_model(self):
         model = ks.models.Sequential([
 
-        layers.Input(shape=self.input_shape),
-        layers.Conv2D(32, (3, 3), strides=2 ,activation='relu', padding='same'),
-        layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
-        layers.MaxPooling2D((2, 2), padding='same'),
-        layers.Conv2D(64, (3, 3), strides=1 ,activation='relu', padding='same'),
-        layers.Conv2D(64, (3, 3), strides=1 ,activation='relu', padding='same'),
-        layers.MaxPooling2D((2, 2), padding='same'),
-        layers.Conv2D(128, (3, 3), strides=1 ,activation='relu', padding='same'),
-        layers.Conv2D(128, (3, 3), strides=1 ,activation='relu', padding='same'),
-        layers.MaxPooling2D((2, 2), padding='same'),
-        layers.Dropout(0.5),
-        layers.BatchNormalization(),
+       layers.Input(shape=self.input_shape),
+       layers.Conv2D(32, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
+       layers.MaxPooling2D((2, 2), padding='same'),
+       layers.Conv2D(64, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.Conv2D(64, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.MaxPooling2D((2, 2), padding='same'),
+       layers.Conv2D(128, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.Conv2D(128, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.Dropout(0.5),
+       layers.BatchNormalization(),
+
+       layers.Conv2D(256, (3, 3), strides=2 ,activation='relu', padding='same'),
+       layers.Conv2D(256, (3, 3), strides=2 ,activation='relu', padding='same'),
 
 
+       layers.Conv2DTranspose(128, (3, 3), strides=2, activation='relu', padding='same'),
+       layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding='same'),
+       layers.MaxPooling2D((2, 2), strides=1, padding='same'),
+       layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same'),
+       layers.Conv2D(64, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.MaxPooling2D((2, 2), strides=1, padding='same'),
+       layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same'),
+       layers.Conv2D(32, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.MaxPooling2D((2, 2), strides=1, padding='same'),
+       layers.Conv2DTranspose(3, (3, 3), strides=2, activation='relu', padding='same'),
+       layers.Conv2D(3, (3, 3), strides=1 ,activation='relu', padding='same'),
+       layers.BatchNormalization(),
 
-        layers.Conv2DTranspose(128, (3, 3), strides=2, activation='relu', padding='same'),
-        layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding='same'),
-        layers.MaxPooling2D((2, 2), strides=1, padding='same'),
-        layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same'),
-        layers.Conv2D(64, (3, 3), strides=1 ,activation='relu', padding='same'),
-        layers.MaxPooling2D((2, 2), strides=1, padding='same'),
-        layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same'),
-        layers.Conv2D(32, (3, 3), strides=1 ,activation='relu', padding='same'),
-        layers.MaxPooling2D((2, 2), strides=1, padding='same'),
-        layers.Conv2DTranspose(3, (3, 3), strides=2, activation='relu', padding='same'),
-        layers.BatchNormalization(),
+       layers.Conv2D(1, (3,3) ,strides=1 , padding='same' ,activation='sigmoid'),
 
-        layers.Conv2D(1, (3,3) ,strides=1 , padding='same' ,activation='sigmoid'),
+
 
 ])
         model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
