@@ -47,7 +47,8 @@ class RoadExtractor:
     def save_model(model, name):
         model.save(f'trained_models/{name}.keras')
     def load_model(model, name):
-        return model.load_weights(f'trained_models/{name}.keras')
+        model.load_weights(f'trained_models/{name}.keras') 
+        return model  #return the model??
     def get_predction(model, image , threshold=0.1):
         pred_image = model.predict(image)
         pred_image = pred_image[0]
