@@ -8,7 +8,7 @@ def load_metadata(csv_file_path):
     return pd.read_csv(f'{csv_file_path}')
 
 def load_images_paths(csv_file):
-    return (csv_file['sat_image_path'] , csv_file['map_image_path'])
+    return (csv_file['sat_image_path'] , csv_file['mask_image_path'])
 
 def prepare_trainingdata(x_train_paths,y_train_paths, img_size=(256,256),number_of_buffer=2000):
     
