@@ -2,15 +2,11 @@ import keras as ks
 from keras import layers
 import numpy as np
 
-class RoadExtractor:
+class RoadExtractor(ks.Model):
     def __init__(self, input_shape=(256, 256, 3)):
+        super(RoadExtractor, self).__init__()
         self.input_shape = input_shape
-
-
-    def build_model(self):
-        model = ks.models.Sequential([
-
-       layers.Input(shape=self.input_shape),
+        self.rd_layers = [
        layers.Conv2D(32, (3, 3), strides=1 ,activation='relu', padding='same'),
        layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
        layers.MaxPooling2D((2, 2), padding='same'),
@@ -41,24 +37,24 @@ class RoadExtractor:
 
        layers.Conv2D(1, (3,3) ,strides=1 , padding='same' ,activation='sigmoid'),
 
+      ]
+    def call(self,inputs):
+      x = (self.rd_layers[0])(inputs)
+      for layer in self.rd_layers[1:]:
+        x = layer(x)
+      return x
 
-
-])
-        model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        return model
-    
-    
-    def save_model(model, name):
-        model.save(f'trained_models/{name}.keras')
-    def load_model(model, name):
-        model.load_weights(f'trained_models/{name}.keras') 
-        return model  #return the model??
-    def get_predction(model, image , threshold=0.1):
-        pred_image = model.predict(image)
+    def build_model(self, optimizer='adam',loss='binary_crossentropy',metrics=['accuracy']):
+        inputs = ks.Input(shape=self.input_shape)
+        outputs = self.call(inputs)
+        self.model = ks.Model(inputs=inputs,outputs=outputs)
+        self.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+    def save_model(self, name):
+        self.save_weights(f'trained_models/{name}.h5')
+    def load_model(self, name):
+        self.load_weights(f'trained_models/{name}.h5') 
+    def get_predction(self, image , threshold=0.1):
+        pred_image = self.predict(image)
         pred_image = pred_image[0]
         pred_image = np.where(pred_image > threshold, 1, 0)
         return pred_image
-        
-        
-        
-    
