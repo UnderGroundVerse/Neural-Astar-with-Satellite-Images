@@ -47,7 +47,7 @@ def prepare_testdata(folder_path, img_size=(256,256)):
     test_images = test_images / 255.0
     return test_images
     
-def process_masked_for_training(csv_file, img_size=(256,256),buffer_size=2000):
+def process_masked(csv_file, img_size=(256,256),buffer_size=2000):
     mask_paths = csv_file['mask_path']
     mask_images = []
 
