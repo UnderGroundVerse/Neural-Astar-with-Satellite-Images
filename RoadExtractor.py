@@ -52,9 +52,9 @@ class RoadExtractor(ks.Model):
         self.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         self.build( (None, *self.input_dim))
     def save_model(self, name):
-        self.save_weights(f'trained_models/{name}.h5')
+        self.save_weights(f'trained_models/{name}')
     def load_model(self, name):
-        self.load_weights(f'trained_models/{name}.h5') 
+        self.load_weights(f'trained_models/{name}') 
     def get_predction(self, image , threshold=0.1):
         pred_image = self.predict(image)
         pred_image = pred_image[0]
