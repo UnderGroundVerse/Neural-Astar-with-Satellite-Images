@@ -131,39 +131,4 @@ Masks are grayscale-converted and thresholded for binary occupancy use.
 
 ---
 
-## Pretrained Models
 
-Available in `trained_models/`:
-- `RoadExtractor-weights-118ep.h5`
-- `feed_forward_n1000_s20x20_e10_bs32.keras`
-
----
-
-## Notes / Current Limitations
-
-- No dependency lock file is provided.
-- Some helper methods are class methods without `self` and are intended to be called as utility functions.
-- `data_generation.py` contains duplicate definitions of `generate_training_data`; the latter overrides the former.
-- The repo is notebook-heavy (research/prototyping style) and can benefit from packaging and script entrypoints.
-
----
-
-## Suggested Next Improvements
-
-1. Add `requirements.txt` (or `pyproject.toml`) with exact versions.
-2. Add a reproducible training script for road segmentation and neural heuristic.
-3. Add evaluation metrics:
-   - segmentation IoU/F1
-   - A* node expansions/time with classic vs neural heuristic
-4. Add unit tests for:
-   - grid validity/block checks
-   - deterministic path outputs on fixed maps
-   - heuristic model input/output shape checks
-5. Standardize model save/load APIs and naming conventions.
-
----
-
-## License
-
-No license file is currently present in the repository.  
-Add one (e.g., MIT) if you intend others to reuse or modify this code.
